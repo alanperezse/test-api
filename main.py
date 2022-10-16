@@ -119,9 +119,9 @@ def get_nodes(project_id: str, ):
         {
             '_id': '123456',
             'data': {
-                'label': 'Something'
+                'label': 'Motor'
             },
-            'position': {'x': 300, 'y': 300},
+            'position': {'x': 400, 'y': 300},
             'relationships': [
                 '12345',
             ],
