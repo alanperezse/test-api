@@ -1,7 +1,5 @@
-from turtle import st
-from typing import Union
+from typing import Any, List, Union
 from unicodedata import name
-from xmlrpc.client import boolean
 from fastapi.middleware.cors import CORSMiddleware
 
 from fastapi import FastAPI
@@ -9,7 +7,43 @@ from pydantic import BaseModel
 
 app = FastAPI()
 
-people = {'people': []}
+class Position(BaseModel):
+    x: float
+    y: float
+
+class Node(BaseModel):
+    _id: str
+    data: Any
+    position: Position
+    relationships: List[str]
+
+nodes = [
+    {
+        '_id': '1234',
+        'data': {
+            'label': 'Window',
+        },
+        'position': {'x': 200, 'y': 200},
+        'relationships': []
+    },
+    {
+        '_id': '12345',
+        'data': {
+            'label': 'A/C',
+        },
+        'position': {'x': 200, 'y': 300},
+        'relationships': ['123456',]
+    },
+    {
+        '_id': '123456',
+        'data': {
+            'label': 'Motor'
+        },
+        'position': {'x': 400, 'y': 300},
+        'relationships': ['12345',],
+    },
+]
+
 
 class Project_Info(BaseModel):
     baud_rate: int
@@ -75,55 +109,10 @@ def get_people(project_id: str, play: Play):
     print(f'project_id: {project_id}')
     print(play.play)
 
-
-@app.get('/projects/{project_id}/sensors')
-def get_ids(project_id: str):
-    return {
-        '1234': {
-            'label': 'A/C',
-            'active': True
-        },
-        '12345': {
-            'label': 'Window',
-            'active': True
-        },
-        '123456': {
-            'label': None,
-            'active': True
-        },
-    }
-
 @app.get('/projects/{project_id}/nodes')
 def get_nodes(project_id: str, ):
-    return [
-        {
-            '_id': '1234',
-            'data': {
-                'label': 'Window',
-            },
-            'position': {'x': 200, 'y': 200},
-            'relationships': [
+    return nodes
 
-            ]
-        },
-        {
-            '_id': '12345',
-            'data': {
-                'label': 'A/C',
-            },
-            'position': {'x': 200, 'y': 300},
-            'relationships': [
-                '123456'
-            ]
-        },
-        {
-            '_id': '123456',
-            'data': {
-                'label': 'Motor'
-            },
-            'position': {'x': 400, 'y': 300},
-            'relationships': [
-                '12345',
-            ],
-        },
-    ]
+@app.put('/projects/{project_id}/nodes/{node_id}')
+def update_nodes(project_id: str, node_id: str, nodes: List[Node]):
+    print(nodes)
