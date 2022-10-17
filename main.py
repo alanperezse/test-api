@@ -1,5 +1,4 @@
 from typing import Any, List, Union
-from unicodedata import name
 from fastapi.middleware.cors import CORSMiddleware
 
 from fastapi import FastAPI
@@ -12,14 +11,14 @@ class Position(BaseModel):
     y: float
 
 class Node(BaseModel):
-    _id: str
+    id: str
     data: Any
     position: Position
     relationships: List[str]
 
 nodes = [
     {
-        '_id': '1234',
+        'id': '1234',
         'data': {
             'label': 'Window',
         },
@@ -27,7 +26,7 @@ nodes = [
         'relationships': []
     },
     {
-        '_id': '12345',
+        'id': '12345',
         'data': {
             'label': 'A/C',
         },
@@ -35,7 +34,7 @@ nodes = [
         'relationships': ['123456',]
     },
     {
-        '_id': '123456',
+        'id': '123456',
         'data': {
             'label': 'Motor'
         },
@@ -113,6 +112,19 @@ def get_people(project_id: str, play: Play):
 def get_nodes(project_id: str, ):
     return nodes
 
-@app.put('/projects/{project_id}/nodes/{node_id}')
-def update_nodes(project_id: str, node_id: str, nodes: List[Node]):
-    print(nodes)
+@app.put('/projects/{project_id}/nodes')
+def update_nodes(project_id: str, updated_nodes: List[Node]):
+    json_nodes = []
+    for node in updated_nodes:
+        json_nodes.append({
+            'id': node.id,
+            'data': node.data,
+            'position': {'x': node.position.x, 'y': node.position.y},
+            'relationships': node.relationships
+        })
+
+    for json_node in json_nodes:
+        print(json_node)
+        
+    global nodes
+    nodes = json_nodes
