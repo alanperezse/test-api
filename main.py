@@ -11,14 +11,14 @@ class Position(BaseModel):
     y: float
 
 class Node(BaseModel):
-    id: str
+    nodeId: str
     data: Any
     position: Position
     relationships: List[str]
 
 nodes = [
     {
-        'id': '1234',
+        'nodeId': '1234',
         'data': {
             'label': 'Window',
         },
@@ -26,7 +26,7 @@ nodes = [
         'relationships': []
     },
     {
-        'id': '12345',
+        'nodeId': '12345',
         'data': {
             'label': 'A/C',
         },
@@ -34,11 +34,15 @@ nodes = [
         'relationships': ['123456',]
     },
     {
-        'id': '123456',
-        'data': {
-            'label': 'Motor'
-        },
-        'position': {'x': 400, 'y': 300},
+        'nodeId': '123456',
+        'data': None,
+        'position': None,
+        'relationships': ['12345',],
+    },
+    {
+        'nodeId': '1234567',
+        'data': None,
+        'position': None,
         'relationships': ['12345',],
     },
 ]
@@ -95,21 +99,9 @@ def get_people(project_id: str, play: Play):
     print(f'project_id: {project_id}')
     print(play.play)
 
-
-@app.put("/projects/{project_id}/play")
-def get_people(project_id: str, play: Play):
-    print('Play details')
-    print(f'project_id: {project_id}')
-    print(play.play)
-
-@app.put("/projects/{project_id}/play")
-def get_people(project_id: str, play: Play):
-    print('Play details')
-    print(f'project_id: {project_id}')
-    print(play.play)
-
 @app.get('/projects/{project_id}/nodes')
 def get_nodes(project_id: str, ):
+    print(nodes)
     return nodes
 
 @app.put('/projects/{project_id}/nodes')
@@ -117,7 +109,7 @@ def update_nodes(project_id: str, updated_nodes: List[Node]):
     json_nodes = []
     for node in updated_nodes:
         json_nodes.append({
-            'id': node.id,
+            'nodeId': node.nodeId,
             'data': node.data,
             'position': {'x': node.position.x, 'y': node.position.y},
             'relationships': node.relationships
