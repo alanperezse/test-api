@@ -22,6 +22,7 @@ nodes = [
         'data': {
             'label': 'Window',
         },
+        'name': 'Window',
         'position': {'x': 200, 'y': 200},
         'relationships': []
     },
@@ -30,20 +31,23 @@ nodes = [
         'data': {
             'label': 'A/C',
         },
+        'name': 'A/C',
         'position': {'x': 200, 'y': 300},
         'relationships': ['123456',]
     },
     {
         'nodeId': '123456',
         'data': None,
+        'name': 'some name',
         'position': None,
         'relationships': ['12345',],
     },
     {
         'nodeId': '1234567',
         'data': None,
+        'name': 'some other name',
         'position': None,
-        'relationships': ['12345',],
+        'relationships': [],
     },
 ]
 
