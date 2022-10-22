@@ -11,14 +11,15 @@ class Position(BaseModel):
     y: float
 
 class Node(BaseModel):
-    nodeId: str
+    nodeID: str
+    name: str
     data: Any
     position: Position
     relationships: List[str]
 
 nodes = [
     {
-        'nodeId': '1234',
+        'nodeID': '1234',
         'data': {
             'label': 'Window',
         },
@@ -27,23 +28,23 @@ nodes = [
         'relationships': []
     },
     {
-        'nodeId': '12345',
+        'nodeID': '12345',
         'data': {
             'label': 'A/C',
         },
         'name': 'A/C',
         'position': {'x': 200, 'y': 300},
-        'relationships': ['123456',]
+        'relationships': ['123456', '1234567']
     },
     {
-        'nodeId': '123456',
+        'nodeID': '123456',
         'data': None,
         'name': 'some name',
         'position': None,
         'relationships': ['12345',],
     },
     {
-        'nodeId': '1234567',
+        'nodeID': '1234567',
         'data': None,
         'name': 'some other name',
         'position': None,
@@ -110,17 +111,12 @@ def get_nodes(project_id: str, ):
 
 @app.put('/projects/{project_id}/nodes')
 def update_nodes(project_id: str, updated_nodes: List[Node]):
-    json_nodes = []
-    for node in updated_nodes:
-        json_nodes.append({
-            'nodeId': node.nodeId,
-            'data': node.data,
-            'position': {'x': node.position.x, 'y': node.position.y},
-            'relationships': node.relationships
-        })
-
-    for json_node in json_nodes:
-        print(json_node)
-        
     global nodes
-    nodes = json_nodes
+    for updated_node in updated_nodes:
+        for node in nodes:
+            if node['nodeID'] == updated_node.nodeID:
+                node['data'] = updated_node.data
+                node['position'] = updated_node.position
+                node['relationships'] = updated_node.relationships
+                node['name'] = updated_node.name
+        
